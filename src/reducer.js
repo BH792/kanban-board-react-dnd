@@ -1,3 +1,4 @@
+// reducer.js
 export default (
   state = {
     cards: []
@@ -5,6 +6,10 @@ export default (
   action
 ) => {
   switch (action.type) {
+    case 'NEW_CARD':
+      return {
+        cards: [ ...state.cards, action.card]
+      }
     default:
       return state;
   }
