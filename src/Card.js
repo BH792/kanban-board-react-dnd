@@ -1,18 +1,33 @@
 // Card.js
 import React from 'react'
+import { DragSource } from 'react-dnd'
 
-const Card = ({text}) => {
-  return (
+const Card = ({
+  card,
+  connectDragSource
+}) => {
+  return connectDragSource(
     <div style={style}>
-      {text}
+      {card.text}
     </div>
   )
 }
 
-export default Card;
+const cardSource = {
+  beginDrag(props) {
+    return {
+      id: props.card.id
+    }
+  }
+}
 
+function collect(connect) {
+  return {
+    connectDragSource: connect.dragSource()
+  }
+}
 
-
+export default DragSource('CARD', cardSource, collect)(Card);
 
 const style = {
   border: 'solid thin black',

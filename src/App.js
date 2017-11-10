@@ -1,8 +1,10 @@
 // App.js
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import HTML5Backend from 'react-dnd-html5-backend';
 import CardColumn from './CardColumn';
-import { newCard } from './actions';
+import { connect } from 'react-redux';
+import { DragDropContext } from 'react-dnd';
+import { newCard, changeCardColumn } from './actions';
 
 class App extends Component {
   newCard = () => {
@@ -10,6 +12,7 @@ class App extends Component {
   }
 
   render() {
+    const { changeCardColumn } = this.props
     const { todo, working, done } = this.props.cards
     return (
       <div>
@@ -20,9 +23,21 @@ class App extends Component {
           New Card
         </button>
         <div style={{display: 'flex'}}>
-          <CardColumn cards={todo}/>
-          <CardColumn cards={working}/>
-          <CardColumn cards={done}/>
+          <CardColumn
+            column={'todo'}
+            cards={todo}
+            drop={changeCardColumn}
+          />
+          <CardColumn
+            column={'working'}
+            cards={working}
+            drop={changeCardColumn}
+          />
+          <CardColumn 
+            column={'done'}
+            cards={done}
+            drop={changeCardColumn}
+          />
         </div>
       </div>
     );
@@ -45,10 +60,9 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  { newCard }
-)(App);
+export default DragDropContext(HTML5Backend)(
+  connect(mapStateToProps, { newCard, changeCardColumn })(App)
+);
 
 const style = {
   width: '100px',
