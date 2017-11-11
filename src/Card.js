@@ -1,16 +1,23 @@
 // Card.js
 import React from 'react'
-import { DragSource } from 'react-dnd'
+import { DragSource, DropTarget } from 'react-dnd'
 
 const Card = ({
   card,
-  connectDragSource
+  connectDragSource,
+  connectDropTarget,
+  isOver,
+  isDragging
 }) => {
-  return connectDragSource(
-    <div style={style}>
+  return connectDropTarget(connectDragSource(
+    <div style={{
+      ...style,
+      opacity: isDragging ? 0 : 1,
+      backgroundColor: isOver ? '#E6E6FA' : 'white'
+    }}>
       {card.text}
     </div>
-  )
+  ))
 }
 
 const cardSource = {
@@ -21,13 +28,34 @@ const cardSource = {
   }
 }
 
-function collect(connect) {
+function dragCollect(connect, monitor) {
   return {
-    connectDragSource: connect.dragSource()
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
   }
 }
 
-export default DragSource('CARD', cardSource, collect)(Card);
+const cardTarget = {
+  drop(props, monitor) {
+    return {
+      dropId: props.card.id
+    }
+  },
+  canDrop(props, monitor) {
+    return props.card.id !== monitor.getItem().id
+  }
+}
+
+function dropCollect(connect, monitor) {
+  return {
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver()
+  }
+}
+
+export default DropTarget('CARD', cardTarget, dropCollect)(
+  DragSource('CARD', cardSource, dragCollect)(Card)
+);
 
 const style = {
   border: 'solid thin black',

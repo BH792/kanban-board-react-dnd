@@ -1,10 +1,11 @@
 // App.js
 import React, { Component } from 'react';
 import HTML5Backend from 'react-dnd-html5-backend';
+import TouchBackend from 'react-dnd-touch-backend';
 import CardColumn from './CardColumn';
 import { connect } from 'react-redux';
 import { DragDropContext } from 'react-dnd';
-import { newCard, changeCardColumn } from './actions';
+import { newCard, changeCardColumn, changeCardOrder } from './actions';
 
 class App extends Component {
   newCard = () => {
@@ -12,7 +13,7 @@ class App extends Component {
   }
 
   render() {
-    const { changeCardColumn } = this.props
+    const { changeCardColumn, changeCardOrder } = this.props
     const { todo, working, done } = this.props.cards
     return (
       <div>
@@ -27,16 +28,19 @@ class App extends Component {
             column={'todo'}
             cards={todo}
             drop={changeCardColumn}
+            swap={changeCardOrder}
           />
           <CardColumn
             column={'working'}
             cards={working}
             drop={changeCardColumn}
+            swap={changeCardOrder}
           />
-          <CardColumn 
+          <CardColumn
             column={'done'}
             cards={done}
             drop={changeCardColumn}
+            swap={changeCardOrder}
           />
         </div>
       </div>
@@ -45,23 +49,21 @@ class App extends Component {
 }
 
 function mapStateToProps(state) {
-  const cards = {
-    todo: [],
-    working: [],
-    done: [],
-  };
-
-  state.cards.forEach(card => {
-    cards[card.column].push(card)
-  })
-
   return {
-    cards
-  }
+    cards: {
+      todo: state.todo.map(id => state.byId[id]),
+      working: state.working.map(id => state.byId[id]),
+      done: state.done.map(id => state.byId[id]),
+    }
+  };
 }
 
 export default DragDropContext(HTML5Backend)(
-  connect(mapStateToProps, { newCard, changeCardColumn })(App)
+  connect(mapStateToProps, { newCard, changeCardColumn, changeCardOrder })(App)
+);
+
+export const Touch = DragDropContext(TouchBackend)(
+  connect(mapStateToProps, { newCard, changeCardColumn, changeCardOrder })(App)
 );
 
 const style = {

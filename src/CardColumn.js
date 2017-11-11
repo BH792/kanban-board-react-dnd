@@ -20,9 +20,15 @@ const CardColumn = ({
 
 const columnTarget = {
   drop(props, monitor) {
+    console.log('Column Drop Fired');
     const id = monitor.getItem().id;
     const column = props.column;
-    props.drop(id, column)
+    if (!props.cards.some(card => card.id === id)) {
+      props.drop(id, column);
+    }
+    if (monitor.getDropResult()) {
+      props.swap(id, monitor.getDropResult().dropId)
+    }
   }
 }
 

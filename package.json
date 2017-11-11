@@ -4,9 +4,11 @@
   "private": true,
   "homepage": "https://bh792.github.io/kanban-board-react-dnd/",
   "dependencies": {
+    "gh-pages": "^1.0.0",
     "react": "^16.1.0",
     "react-dnd": "^2.5.4",
     "react-dnd-html5-backend": "^2.5.4",
+    "react-dnd-touch-backend": "^0.3.15",
     "react-dom": "^16.1.0",
     "react-redux": "^5.0.6",
     "react-scripts": "1.0.17",
