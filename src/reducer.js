@@ -1,7 +1,6 @@
 // reducer.js
 export default (
   state = {
-    cards: [],
     byId: {},
     todo: [],
     working: [],
