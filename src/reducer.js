@@ -8,12 +8,14 @@ export default (
   },
   action
 ) => {
+  const { byId } = state
+  const { card, dragId, dropId } = action
   switch (action.type) {
     case 'SWAP_CARD':
-      const columnName = state.byId[action.dropId].column
+      const columnName = byId[dropId].column
       let column = [ ...state[columnName]]
-      const curIndex = column.indexOf(action.dragId)
-      const newIndex = column.indexOf(action.dropId)
+      const curIndex = column.indexOf(dragId)
+      const newIndex = column.indexOf(dropId)
       const item = column.splice(curIndex, 1)
       column = column.slice(0, newIndex).concat(item).concat(column.slice(newIndex))
       return {
@@ -24,23 +26,23 @@ export default (
       return {
         ...state,
         byId: {
-          ...state.byId,
-          [action.card.id]: {
-            ...state.byId[action.card.id],
-            column: action.card.column
+          ...byId,
+          [card.id]: {
+            ...byId[card.id],
+            column: card.column
           }
         },
-        [state.byId[action.card.id].column]: state[state.byId[action.card.id].column].filter(id => id !== action.card.id),
-        [action.card.column]: [...state[action.card.column], action.card.id]
+        [byId[card.id].column]: state[byId[card.id].column].filter(id => id !== card.id),
+        [card.column]: [...state[card.column], card.id]
       }
     case 'NEW_CARD':
       return {
         ...state,
         byId: {
-          ...state.byId,
-          [action.card.id]: action.card
+          ...byId,
+          [card.id]: card
         },
-        [action.card.column]: [...state[action.card.column], action.card.id]
+        [card.column]: [...state[card.column], card.id]
       }
     default:
       return state;
