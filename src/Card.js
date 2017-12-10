@@ -37,6 +37,7 @@ function dragCollect(connect, monitor) {
 
 const cardTarget = {
   drop(props, monitor) {
+    console.log('Card Drop Fired');
     return {
       dropId: props.card.id
     }
